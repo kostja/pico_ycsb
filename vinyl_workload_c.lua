@@ -317,9 +317,12 @@ local is = space.index.pk:stat()
 local total_rps = stats.deletes + stats.inserts + stats.reads + stats.scans
 local elapsed_s = RUNTIME_MINUTES * 60
 log.info('=== FINAL REPORT ===')
+local total_txs = total_rps / BATCH_SIZE
 log.info('Total ops:       %d', total_rps)
-log.info('RPS:             %.0f', total_rps / elapsed_s)
-log.info('Errors:          %d', stats.errors)
+log.info('OPS:             %.0f', total_rps / elapsed_s)
+log.info('TPS:             %.0f', total_txs / elapsed_s)
+log.info('Errors:          %d (%.1f%%)', stats.errors,
+         stats.errors > 0 and stats.errors * 100 / (total_txs + stats.errors) or 0)
 log.info('Ranges:          %d', is.range_count)
 log.info('Runs:            %d', is.run_count)
 log.info('Disk bytes:      %d', is.disk.bytes or 0)
